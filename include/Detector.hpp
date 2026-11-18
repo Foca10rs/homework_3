@@ -2,5 +2,5 @@
 class Detector
 {
 public:
-     void detect(cv::Mat &image,std::vector<std::vector<cv::Point2f>> &corners,cv::Mat &dst);
+     void detect(cv::Mat &image,std::vector<std::vector<cv::Point2f>> &corners,cv::Mat &dst,std::vector<int> &ids);
 };

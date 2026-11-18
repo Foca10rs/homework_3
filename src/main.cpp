@@ -1,5 +1,5 @@
 #include "Detector.hpp"
-#include "pnp_solve.hpp"
+#include "line.hpp"
 #include <opencv2/opencv.hpp>
 using namespace cv;
 using namespace std;
@@ -11,9 +11,10 @@ int main()
      Mat D = (Mat_<double>(1,5) << 0.034492,-0.151948,0.003248,0.000364,0.000000);
      Mat src,srcHSV,mask,src_result;
      Detector detector;
-     Solve solve;
+     Line line_points;
      vector<Point3f> boardPoints;
      vector<vector<Point2f>> corners;
+     vector<int> ids;
      Mat rvec,tvec;
      VideoCapture cap(0);
      cap >> src;
@@ -29,11 +30,11 @@ int main()
              break;
          }
          imshow("Image_raw",src);
-         detector.detect(src,corners,src_result);         //Detector.cpp中克隆src并识别且画了正面的四条线
+         detector.detect(src,corners,src_result,ids);         //Detector.cpp中克隆src并识别且画了正面的四条线
          if (!corners.empty())
          {
              solvePnP(boardPoints,corners[0],K,D,rvec,tvec,false,SOLVEPNP_IPPE);
-             solve.solve(src_result,K,D,rvec,tvec);
+             line_points.line_points(src_result,K,D,rvec,tvec,ids);
          }
          imshow("result", src_result);
          cvtColor(src,srcHSV,COLOR_BGR2HSV);
