@@ -5,10 +5,10 @@ using namespace cv;
 using namespace std;
 int main()
 {
-     Mat K = (Mat_<double>(3,3) << 640.112724,0.000000,292.438835,
-0.000000,640.242488,230.378112,
-0.000000,0.000000,1.000000);
-     Mat D = (Mat_<double>(1,5) << 0.034492,-0.151948,0.003248,0.000364,0.000000);
+     Mat K,D;
+     FileStorage fs("calib.yaml", FileStorage::READ);
+     fs["camera_matrix"] >> K;
+     fs["distortion_coefficients"] >> D;
      Mat src,srcHSV,mask,src_result;
      Detector detector;
      Line line_points;
