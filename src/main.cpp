@@ -9,7 +9,7 @@ int main()
 0.000000,640.242488,230.378112,
 0.000000,0.000000,1.000000);
      Mat D = (Mat_<double>(1,5) << 0.034492,-0.151948,0.003248,0.000364,0.000000);
-     Mat src,srcHSV,mask,src1;
+     Mat src,srcHSV,mask,src_result;
      Detector detector;
      Solve solve;
      vector<Point3f> boardPoints;
@@ -29,9 +29,13 @@ int main()
              break;
          }
          imshow("Image_raw",src);
-         detector.detect(src,corners,src1);         //Detector.cpp中克隆src并识别且画了正面的四条线
-         solve.solve(src1,boardPoints,corners,K,D,rvec,tvec);
-         imshow("result", src1);
+         detector.detect(src,corners,src_result);         //Detector.cpp中克隆src并识别且画了正面的四条线
+         if (!corners.empty())
+         {
+             solvePnP(boardPoints,corners[0],K,D,rvec,tvec,false,SOLVEPNP_IPPE);
+             solve.solve(src_result,K,D,rvec,tvec);
+         }
+         imshow("result", src_result);
          cvtColor(src,srcHSV,COLOR_BGR2HSV);
          inRange(srcHSV,Scalar(0,0,0),Scalar(130,180,180),mask);
          imshow("Image_binary",mask);
